@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ข้อสอบออนไลน์ ปวช.: นักสืบข้อมูลและประวัติศาสตร์คนทำงาน (จำกัดเวลา & บล็อกการเฉลย)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts (Sarabun) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background-color: #f3f4f6; /* Premium light gray background */
+      user-select: none; /* Anti-copy: Prevents text selection */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+    .forms-header {
+      border-top: 10px solid #5b21b6; /* Premium dark purple header accent */
+    }
+  </style>
+</head>
+<body class="py-4 md:py-8 px-2 md:px-4 text-gray-800 pb-24">
+
+  <!-- STICKY TIMER BAR (Shows at top when test is running) -->
+  <div id="sticky-timer-bar" class="fixed top-0 left-0 w-full bg-red-600 text-white text-center py-2.5 font-bold z-40 hidden shadow-md flex items-center justify-center gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span class="text-sm md:text-base">เวลาทำข้อสอบคงเหลือ: <span id="countdown-timer" class="font-mono text-lg md:text-xl">20:00</span> นาที</span>
+  </div>
+
+  <div class="max-w-3xl mx-auto space-y-4">
+    
+    <!-- HEADER CARD -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden forms-header transition-all duration-300">
+      <div class="bg-purple-50 p-6 border-b border-purple-100">
+        <h1 class="text-2xl md:text-3xl font-bold text-purple-950 mb-2">ข้อสอบออนไลน์: นักสืบข้อมูลและประวัติศาสตร์ฉบับคนทำงาน</h1>
+        <p class="text-sm md:text-base text-purple-800 font-medium">แบบทดสอบวัดระดับความรู้การคิดเชิงวิพากษ์และการใช้หลักฐานเพื่อการตัดสินใจสำหรับนักเรียนระดับ ปวช.</p>
+      </div>
+      <div class="p-6 space-y-4">
+        <!-- Security Info Banner -->
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-md flex items-start gap-3">
+          <span class="text-red-500 mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.088 5.502 2 6.002 2 6.5c0 5.14 3.038 9.574 7.375 11.538a1.2 1.2 0 001.25 0C14.962 16.074 18 11.64 18 6.5c0-.498-.088-.998-.166-1.5A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v5a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </span>
+          <div>
+            <h4 class="text-sm font-bold text-red-800">มาตรการป้องกันการทุจริตและการแชร์ข้อสอบ</h4>
+            <ul class="text-xs text-red-700 list-disc list-inside mt-1 space-y-1">
+              <li>จำกัดเวลาทำข้อสอบรวม <b>20 นาที</b> (ระบบจะบันทึกและส่งข้อสอบอัตโนมัติทันทีเมื่อหมดเวลา)</li>
+              <li>จำกัดสิทธิ์การทำข้อสอบได้เพียง <b>1 ครั้ง ต่อ 1 รหัสประจำตัวนักเรียน</b></li>
+              <li><b>ระบบไม่แสดงเฉลยรายข้อหรืออธิบายหลังส่งกระดาษคำตอบ</b> เพื่อป้องกันการแคปภาพแจกคำตอบ</li>
+              <li>บล็อกระบบคลิกขวา ป้องกันการดึงรหัส และปิดการลากลอกข้อความโจทย์</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-4 text-xs md:text-sm text-gray-500 pt-2">
+          <span class="flex items-center gap-1 bg-purple-50 text-purple-700 px-3 py-1.5 rounded-full font-semibold">
+            🎯 จำนวน: 20 ข้อ
+          </span>
+          <span class="flex items-center gap-1 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full font-semibold">
+            🏆 เกณฑ์ผ่าน: 12 ข้อขึ้นไป (60%)
+          </span>
+          <span class="flex items-center gap-1 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full font-semibold">
+            ⏱️ เวลาทำสอบ: 20 นาที
+          </span>
+        </div>
+        <p class="text-xs text-red-500 font-semibold">* จำเป็นต้องตอบทุกข้อ</p>
+      </div>
+    </div>
+
+    <!-- STUDENT INFO CARD (Profile & Verification) -->
+    <div id="student-info-card" class="bg-white rounded-lg shadow-md p-6 border border-gray-200 transition-all duration-300">
+      <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+        👤 ข้อมูลผู้ทำข้อสอบ
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">ชื่อ - นามสกุล *</label>
+          <input type="text" id="student-name" placeholder="เด็กดี เรียนดี" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">เลขประจำตัวนักเรียน *</label>
+          <input type="text" id="student-id" placeholder="เช่น 691234" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm">
+          <p id="checking-id-status" class="text-xs text-gray-400 mt-1 hidden">🔄 กำลังตรวจสอบสิทธิ์สอบ...</p>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">ชั้นปี / ห้อง *</label>
+          <input type="text" id="student-class" placeholder="ปวช. 1/1" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm">
+        </div>
+      </div>
+      
+      <!-- Start Exam Button Control -->
+      <div id="start-exam-control" class="pt-4 border-t border-gray-100 text-center">
+        <button id="start-btn" type="button" onclick="startExam()" class="bg-purple-700 hover:bg-purple-800 text-white font-bold py-3 px-8 rounded-md shadow-md hover:shadow-lg transition-all duration-200 text-sm md:text-base cursor-pointer inline-flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          ยืนยันข้อมูลและเริ่มทำข้อสอบ
+        </button>
+        <p class="text-xs text-gray-500 mt-2">เมื่อกดปุ่มเริ่มทำข้อสอบ เวลาถอยหลังจะเริ่มนับทันทีและไม่สามารถหยุดเวลาได้</p>
+      </div>
+    </div>
+
+    <!-- QUESTIONS CONTAINER (HIDDEN UNTIL STARTED) -->
+    <form id="quiz-form" class="space-y-4 hidden animate-fade-in">
+      <div id="questions-root" class="space-y-4">
+        <!-- Questions dynamically loaded here -->
+      </div>
+
+      <!-- FORM ACTIONS -->
+      <div class="flex items-center justify-between pt-4 pb-12">
+        <button id="submit-btn" type="button" onclick="submitQuiz()" class="bg-purple-700 hover:bg-purple-800 text-white font-bold py-3 px-8 rounded-md shadow-md hover:shadow-lg transition-all duration-200 text-sm md:text-base cursor-pointer w-full md:w-auto">
+          ส่งข้อสอบ (Submit)
+        </button>
+      </div>
+    </form>
+
+    <!-- RESULT CONTAINER (HIDDEN UNTIL SUBMISSION) -->
+    <div id="result-container" class="hidden bg-white rounded-lg shadow-lg p-6 md:p-8 border-2 border-purple-600 space-y-6">
+      <div class="text-center space-y-4 border-b border-gray-100 pb-6">
+        <div class="inline-flex items-center justify-center p-3 bg-green-100 rounded-full text-green-700 mb-2">
+          <!-- Shield Check SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">บันทึกคะแนนสอบเรียบร้อยแล้ว</h2>
+        <p class="text-sm text-red-600 font-semibold">⚠️ ระบบได้ทำการบันทึกข้อมูลและส่งผลคะแนนสอบไปยังรายงานของคุณครูแล้ว และสิทธิ์การทำข้อสอบซ้ำถูกล็อก</p>
+        
+        <div class="p-4 bg-gray-50 rounded-lg inline-block text-left text-sm md:text-base space-y-1 text-gray-700 border border-gray-100">
+          <div><b>ชื่อผู้สอบ:</b> <span id="res-student-name"></span></div>
+          <div><b>รหัสประจำตัว:</b> <span id="res-student-id"></span></div>
+          <div><b>ระดับชั้น:</b> <span id="res-student-class"></span></div>
+        </div>
+        
+        <div class="py-4">
+          <p class="text-lg font-semibold text-gray-500">คะแนนรวมที่ทำได้</p>
+          <p class="text-5xl md:text-6xl font-black text-purple-700 my-2" id="score-text">0 / 20</p>
+          <div id="result-status-badge" class="inline-block px-4 py-2 rounded-full font-bold text-sm">
+            -
+          </div>
+        </div>
+      </div>
+
+      <!-- COPY RESULT BUTTON -->
+      <div class="flex flex-col items-center justify-center space-y-2 bg-purple-50 p-4 rounded-lg border border-purple-100">
+        <p class="text-xs md:text-sm text-purple-800 font-semibold text-center">โปรดคัดลอกรายงานผลนี้ส่งในกลุ่มห้องเรียน เพื่อยืนยันการทำข้อสอบสำเร็จ</p>
+        <button onclick="copyResultToClipboard()" class="bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2.5 px-6 rounded-md shadow transition-all duration-200 text-sm flex items-center gap-2 cursor-pointer">
+          📋 คัดลอกรายงานผลคะแนน
+        </button>
+        <p id="copy-success-msg" class="text-xs text-green-600 font-semibold hidden">คัดลอกผลสอบสำเร็จแล้ว!</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Custom Alert Box Modal -->
+  <div id="custom-alert" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 space-y-4">
+      <div class="flex items-center gap-3 text-amber-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <h3 class="text-lg font-bold text-gray-900">แจ้งเตือนจากระบบ</h3>
+      </div>
+      <p id="custom-alert-msg" class="text-sm text-gray-600">กรุณากรอกข้อมูลส่วนตัวและตอบคำถามให้เรียบร้อยด้วยนะคะ</p>
+      <div class="text-right">
+        <button onclick="closeAlert()" class="bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 px-6 rounded text-sm cursor-pointer">
+          เข้าใจแล้ว
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Duplicate Submission Block Modal -->
+  <div id="duplicate-block-modal" class="fixed inset-0 bg-black/75 hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg shadow-2xl max-w-lg w-full p-6 md:p-8 space-y-5 border-t-8 border-red-600">
+      <div class="flex items-center gap-3 text-red-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m0-6V9m0-6H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-6z" />
+        </svg>
+        <h3 class="text-xl font-bold text-gray-900">ตรวจพบการสอบซ้ำซ้อน!</h3>
+      </div>
+      <div class="space-y-3">
+        <p class="text-sm text-gray-600 leading-relaxed">
+          ขออภัยค่ะ รหัสประจำตัว <b id="block-student-id" class="text-red-600 text-base"></b> นี้ <span class="font-bold text-red-600">เคยส่งคำตอบและบันทึกผลการสอบเรียบร้อยแล้ว</span> ระบบจำกัดให้ทำข้อสอบได้เพียง <b>1 ครั้งเท่านั้น</b> เพื่อความเสมอภาคในการประเมินผลคะแนน
+        </p>
+        <div class="p-4 bg-gray-50 rounded-lg text-sm border border-gray-100">
+          <div class="font-semibold text-gray-700 mb-1">🎯 ประวัติการทำข้อสอบเดิม:</div>
+          <div class="text-gray-600">ชื่อผู้สอบ: <span id="block-student-name" class="font-medium text-gray-900"></span></div>
+          <div class="text-gray-600">คะแนนที่ได้: <b id="block-student-score" class="text-purple-700 text-base"></b></div>
+          <div class="text-gray-600">บันทึกเวลา: <span id="block-student-time"></span></div>
+        </div>
+      </div>
+      <div class="text-center">
+        <p class="text-xs text-red-500 font-bold mb-3">⚠️ กรุณาติดต่อคุณครูผู้คุมสอบทันที หากพบข้อผิดพลาดด้านระบบข้อมูล</p>
+        <button onclick="clearBlockedStudent()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-8 rounded-md text-sm cursor-pointer transition-all duration-200">
+          แก้ไขรหัสประจำตัวนักเรียน
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase & Quiz App Logic module script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Configuration and Globals
+    let auth = null;
+    let db = null;
+    let user = null;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'vocational-detective-quiz';
+
+    const quizData = [
+      {
+        q: "การสืบค้นหาความจริงเกี่ยวกับข้อมูลและเหตุการณ์ในอดีตเปรียบเสมือนบทบาทข้อใดในยุคปัจจุบัน?",
+        choices: [
+          "ก. นักแต่งนิยายเขียนพล็อตเรื่อง",
+          "ข. นักสืบข้อมูลที่ค้นหาหลักฐานอย่างรอบคอบ",
+          "ค. นักแปลภาษาที่ทำงานตามเอกสารสั่งซื้อ",
+          "ง. นักออกแบบกราฟิกเพื่อความบันเทิง"
+        ],
+        correct: 1
+      },
+      {
+        q: "ตามบันได 5 ขั้นตอนของกระบวนการสืบสวนหาความจริง ขั้นแรกที่ต้องปฏิบัติคือข้อใด?",
+        choices: [
+          "ก. การตีความแปลหลักฐานให้ออก",
+          "ข. การตั้งคำถาม กำหนดปัญหาให้ชัดเจน",
+          "ค. การรวบรวมหลักฐานจากห้องสมุด",
+          "ง. การนำเสนอรายงานสรุปเป็นรูปเล่ม"
+        ],
+        correct: 1
+      },
+      {
+        q: "ขั้นตอนการสแกนหาความจริงข้อใด ที่นักเรียน ปวช. จะต้องวิเคราะห์เพื่อหาว่าหลักฐานชิ้นนั้นเป็น 'ของจริงหรือของปลอม'?",
+        choices: [
+          "ก. การตีความข้อมูลเชิงปริมาณ",
+          "ข. การวิพากษ์ภายนอก (External Criticism)",
+          "ค. การประเมินอคติในจิตใจผู้เขียน",
+          "ง. การรวบรวมพยานสิ่งแวดล้อม"
+        ],
+        correct: 1
+      },
+      {
+        q: "การประเมินวิพากษ์หลักฐานภายใน (Internal Criticism) มุ่งเน้นไปที่การตรวจสอบเรื่องใดเป็นหลัก?",
+        choices: [
+          "ก. ตรวจสอบว่าแผ่นจารึกสร้างขึ้นในปีศักราชใด",
+          "ข. ตรวจสอบเนื้อหาและค้นหาอคติหรือความลำเอียงภายในเนื้อความ",
+          "ค. ตรวจสอบชนิดวัสดุที่ใช้เขียนตัวอักษร",
+          "ง. ตรวจสอบลายมือและรูปแบบโครงสร้างไวยากรณ์ภายนอก"
+        ],
+        correct: 1
+      },
+      {
+        q: "อคติหรือมุมมองส่วนตัวที่ทำให้หลักฐานมีความบิดเบือนไม่ตรงกับความจริงเรียกว่าอะไร?",
+        choices: [
+          "ก. ความรอบรู้ (Knowledge)",
+          "ข. ความลำเอียง (Bias)",
+          "ค. ความเป็นกลาง (Neutrality)",
+          "ง. ความน่าเชื่อถือ (Reliability)"
+        ],
+        correct: 1
+      },
+      {
+        q: "ในการคัดเลือกข้อมูลเพื่อตัดสินใจในการทำงาน ข้อใดคือหลักการ 'ตีความหลักฐาน' ที่ดีที่สุด?",
+        choices: [
+          "ก. การนำเอาความคิดเห็นปัจจุบันไปตัดสินอดีตโดยไม่สนใจบริบทดั้งเดิม",
+          "ข. การอ่านความหมายแฝงให้ตรงตามข้อเท็จจริง และไม่นำอคติส่วนตัวไปปะปน",
+          "ค. การเลือกตีความเฉพาะข้อมูลที่สนับสนุนความคิดเห็นของกลุ่มเราเท่านั้น",
+          "ง. การแปลภาษาตามพจนานุกรมปัจจุบันแบบตรงตัวอักษรทุกบรรทัด"
+        ],
+        correct: 1
+      },
+      {
+        q: "ข้อใดสะท้อนลักษณะเด่นของกระบวนการนำเสนอข้อมูลในบันไดขั้นที่ 5 ของนักสืบข้อมูล?",
+        choices: [
+          "ก. การเล่าเรื่องราวตามจินตนาการสนุกสนานโดยไม่จำเป็นต้องอ้างอิงแหล่งที่มา",
+          "ข. การเรียบเรียงข้อมูลอย่างมีเหตุมีผล มีการอ้างอิงที่ชัดเจนเพื่อให้ผู้อื่นตรวจสอบได้",
+          "ค. การเขียนรายงานให้ยาวที่สุดเพื่อแสดงว่าหาข้อมูลได้จำนวนมาก",
+          "ง. การคัดลอกผลงานของผู้อื่นมาสรุปโดยตัดทอนรายชื่ออ้างอิงเดิมออกทั้งหมด"
+        ],
+        correct: 1
+      },
+      {
+        q: "ตามกฎความปลอดภัยหากพบข้อมูลข่าวสารบนอินเทอร์เน็ตที่ขัดแย้งกันอย่างรุนแรง นักสืบข้อมูลควรใช้กระบวนการใด?",
+        choices: [
+          "ก. เชื่อข้อมูลที่มีผู้แชร์และกดถูกใจจำนวนมากที่สุดไว้ก่อน",
+          "ข. ใช้กฎการตรวจสอบไขว้หรือสอบทานข้อมูลจากหลายแหล่งอิสระที่มีความน่าเชื่อถือ",
+          "ค. เลือกเชื่อข้อมูลแรกที่ปรากฏในหน้าผลการค้นหาของ Google",
+          "ง. ปฏิเสธข้อมูลทั้งหมดทิ้งไปและเลิกค้นหาความจริงในประเด็นนั้น"
+        ],
+        correct: 1
+      },
+      {
+        q: "ในการทำงานจริง ข้อใดจัดเป็น 'หลักฐานชั้นต้น' (Primary Sources) ที่มีความน่าเชื่อถือสูงสุดเนื่องจากร่วมสมัยกับเหตุการณ์จริง?",
+        choices: [
+          "ก. หนังสือประวัติบริษัทที่เขียนฉลองครบรอบ 50 ปี",
+          "ข. เอกสารสัญญาธุรกิจฉบับจริง หรือบันทึกอีเมลโต้ตอบกับลูกค้าโดยตรง",
+          "ค. บทวิเคราะห์ทางธุรกิจของนักวิชาการที่ประเมินจากภายนอก",
+          "ง. ข่าวลือบนสื่อโซเชียลมีเดียเกี่ยวกับบริษัทคู่แข่ง"
+        ],
+        correct: 1
+      },
+      {
+        q: "หากรายงานประเมินสรุปจากเพื่อนร่วมงานถูกเรียบเรียงและเขียนขึ้น 'ภายหลังเหตุการณ์สิ้นสุดลงแล้ว' จัดเป็นหลักฐานประเภทใด?",
+        choices: [
+          "ก. หลักฐานที่เป็นลายลักษณ์อักษรชั้นต้น",
+          "ข. หลักฐานชั้นรอง (Secondary Sources)",
+          "ค. หลักฐานที่ไม่ผ่านกระบวนการวิพากษ์ข้อมูล",
+          "ง. หลักฐานทางโบราณคดีเชิงประยุกต์"
+        ],
+        correct: 1
+      },
+      {
+        q: "คำว่า 'History' ในประวัติศาสตร์ มีรากศัพท์มาจากคำกรีกโบราณ 'Histor' ซึ่งมีความหมายตรงกับกิจกรรมใด?",
+        choices: [
+          "ก. การเดินเรือท่องเที่ยว",
+          "ข. การถัก หรือ การทอเส้นใย",
+          "ค. การหลอมโลหะทำอาวุธ",
+          "ง. การคำนวณตัวเลขบัญชี"
+        ],
+        correct: 1
+      },
+      {
+        q: "ใครได้รับการยกย่องเป็น 'บิดาแห่งประวัติศาสตร์' ผู้ริเริ่มคำว่า 'Historiai' เมื่อกว่า 2,000 ปีก่อน?",
+        choices: [
+          "ก. อริสโตเติล (Aristotle)",
+          "ข. เฮโรโดตัส (Herodotus)",
+          "ค. โสเครตีส (Socrates)",
+          "ง. เพลโต (Plato)"
+        ],
+        correct: 1
+      },
+      {
+        q: "ตามนิยามประวัติศาสตร์ฉบับคนทำงาน การเรียนรู้ประวัติศาสตร์แท้จริงแล้วคือกระบวนการพัฒนาทักษะใด?",
+        choices: [
+          "ก. ทักษะการท่องจำตัวเลขปีศักราชต่าง ๆ อย่างแม่นยำ",
+          "ข. ทักษะการสืบค้นข้อมูล การวิเคราะห์เชิงวิพากษ์เพื่ออัปเกรดทักษะคนทำงาน",
+          "ค. ทักษะการจำลองแบบเครื่องมือหินโบราณมาใช้งานในออฟฟิศ",
+          "ง. ทักษะการเรียบเรียงตำนานความเชื่อท้องถิ่นเพื่อการโฆษณา"
+        ],
+        correct: 1
+      },
+      {
+        q: "ประวัติศาสตร์เปรียบเสมือน 'บทสนทนาที่ไม่มีวันสิ้นสุด' ระหว่างสิ่งใดกับสิ่งใด?",
+        choices: [
+          "ก. รัฐบาล กับ ภาคธุรกิจเอกชน",
+          "ข. ปัจจุบัน กับ อดีต",
+          "ค. ฝ่ายผลิต กับ ฝ่ายจัดซื้อ",
+          "ง. มนุษย์ กับ เครื่องจักรอุตสาหกรรม"
+        ],
+        correct: 1
+      },
+      {
+        q: "การเปรียบเทียบในข้อใด อธิบายลักษณะความสัมพันธ์ระหว่างประวัติศาสตร์และคนทำงานได้ลึกซึ้งที่สุด?",
+        choices: [
+          "ก. ประวัติศาสตร์เปรียบเสมือนแฟ้มผลงานศิลปะโบราณที่ตั้งโชว์ไว้ในห้องรับแขก",
+          "ข. ประวัติศาสตร์คือความทรงจำของมนุษย์ หากลืมสิ้นก็เหมือนเดินหลงทางในความมืดที่ไร้ตัวตน",
+          "ค. ประวัติศาสตร์คือแผนที่สมบัติที่ระบุตำแหน่งทองคำในพื้นที่เป้าหมาย",
+          "ง. ประวัติศาสตร์เป็นเพียงวิชาท่องจำที่จำเป็นต้องใช้สอบเพื่อรับใบปริญญา"
+        ],
+        correct: 1
+      },
+      {
+        q: "การนับช่วงระยะเวลากาลเวลาสากลข้อใด ระบุช่วงรอบระยะเวลาได้ถูกต้องตรงกันทั้งหมด?",
+        choices: [
+          "ก. ทศวรรษ = 100 ปี, ศตวรรษ = 1,000 ปี, สหสวรรษ = 10,000 ปี",
+          "ข. ทศวรรษ = 10 ปี, ศตวรรษ = 100 ปี, สหสวรรษ = 1,000 ปี",
+          "ค. ทศวรรษ = 5 ปี, ศตวรรษ = 50 ปี, สหสวรรษ = 500 ปี",
+          "ง. ทศวรรษ = 12 ปี, ศตวรรษ = 120 ปี, สหสวรรษ = 1,200 ปี"
+        ],
+        correct: 1
+      },
+      {
+        q: "หากเราต้องการแปลงปีศักราชจาก พุทธศักราช (พ.ศ.) ให้กลายเป็น คริสต์ศักราช (ค.ศ.) จะต้องคำนวณตามสูตรข้อใด?",
+        choices: [
+          "ก. พ.ศ. + 543",
+          "ข. พ.ศ. - 543",
+          "ค. พ.ศ. - 621",
+          "ง. พ.ศ. + 1181"
+        ],
+        correct: 1
+      },
+      {
+        q: "ตัวอย่างข้อใดแสดงถึงการประยุกต์ใช้แนวคิดเรื่อง 'การแบ่งยุคสมัยประวัติศาสตร์' มาใช้กับการจัดระเบียบในระบบคอมพิวเตอร์ออฟฟิศ?",
+        choices: [
+          "ก. การเปลี่ยนรหัสผ่านอีเมลทุก ๆ 3 เดือนเพื่อความปลอดภัยทางไซเบอร์",
+          "ข. การตั้งโฟลเดอร์แยกจัดกลุ่มงาน เช่น 'ปี พ.ศ. 2567', 'ปี พ.ศ. 2568' หรือแบ่งตามโปรเจกต์หัวหน้างาน",
+          "ค. การสุ่มลบไฟล์งานเก่าทิ้งเมื่อเนื้อที่ในฮาร์ดดิสก์เริ่มเต็ม",
+          "ง. การตั้งชื่อพนักงานทุกคนเป็นรหัสตัวเลขสากลตามลำดับการจ้างงาน"
+        ],
+        correct: 1
+      },
+      {
+        q: "การเปลี่ยนผ่านของประวัติศาสตร์มนุษย์ในการก้าวกระโดดจากยุคหินสู่ 'ยุคโลหะ' เกิดขึ้นได้จากปัจจัยสำคัญในข้อใด?",
+        choices: [
+          "ก. การคิดค้นภาษาพูดเพื่อใช้ต่อรองราคาสินค้า",
+          "ข. ความสามารถในการควบคุมไฟ ความร้อน และการเริ่มถลุงโลหะผสม เช่น ยุคสำริด และยุคเหล็ก",
+          "ค. การสร้างระบบราชการเพื่อเก็บภาษีพืชผลทางการเกษตร",
+          "ง. การประดิษฐ์ล้อเลื่อนเพื่อใช้ขนย้ายก้อนหินโบราณขนาดใหญ่"
+        ],
+        correct: 1
+      },
+      {
+        q: "ในฐานะนักเรียน ปวช. ที่กำลังก้าวเข้าสู่การฝึกงานจริง การศึกษาประวัติศาสตร์ฉบับคนทำงานมีประโยชน์ในข้อใดมากที่สุด?",
+        choices: [
+          "ก. ช่วยให้จำประวัติศาสตร์และชีวประวัติบุคคลสำคัญของประเทศไปตอบในข้อสอบระดับชาติได้ดีขึ้น",
+          "ข. ช่วยฝึกกระบวนการคิดวิเคราะห์เชิงลึกอย่างรอบด้าน ปราศจากอคติ และแก้ปัญหาเฉพาะหน้าด้วยเหตุผลเชิงวิพากษ์",
+          "ค. ช่วยให้สามารถแยกแยะวัสดุอุปกรณ์สำนักงานที่เป็นเครื่องใช้โลหะเหล็กกับเหล็กกล้าได้ชัดเจน",
+          "ง. ช่วยเพิ่มทักษะด้านการตลาดและการขายสินค้าผ่านการศึกษาโบราณวัตถุระดับสากล"
+        ],
+        correct: 1
+      }
+    ];
+
+    // Anti-Right Click & Copy preventions
+    document.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      showAlert("⚠️ ไม่สามารถคลิกขวาในระบบข้อสอบได้ เพื่อความปลอดภัยของข้อมูลค่ะ");
+    });
+
+    let userAnswers = {};
+    let examTimer = null;
+    let timeLeft = 1200; // 20 minutes in seconds
+
+    // Initialize Firebase
+    async function initFirebase() {
+      if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+        console.log("Firebase config not available. Active fallback session protection.");
+        return;
+      }
+      try {
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        // Authenticate anonymously (Rule 3)
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        onAuthStateChanged(auth, u => {
+          user = u;
+        });
+      } catch (err) {
+        console.error("Firebase connection error:", err);
+      }
+    }
+
+    // Verify if student ID exists in Firestore or local storage (Rule 2)
+    async function verifySubmission(studentId) {
+      if (!studentId) return null;
+
+      if (db && user) {
+        try {
+          // Rule 1 strict paths
+          const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'submissions', studentId);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            return docSnap.data();
+          }
+        } catch (err) {
+          console.error("Database query error:", err);
+        }
+      }
+
+      // Local Session Storage fallback
+      const localData = JSON.parse(sessionStorage.getItem('local_submissions') || '{}');
+      if (localData[studentId]) {
+        return localData[studentId];
+      }
+
+      return null;
+    }
+
+    // Checking student-id duplicate submission on-blur
+    async function checkExistingSubmission() {
+      const sId = document.getElementById('student-id').value.trim();
+      if (!sId) return;
+
+      const statusIndicator = document.getElementById('checking-id-status');
+      statusIndicator.classList.remove('hidden');
+
+      const existingRecord = await verifySubmission(sId);
+      statusIndicator.classList.add('hidden');
+
+      if (existingRecord) {
+        // Expose duplicate submission lock modal
+        document.getElementById('block-student-id').innerText = sId;
+        document.getElementById('block-student-name').innerText = existingRecord.name;
+        document.getElementById('block-student-score').innerText = existingRecord.score;
+        document.getElementById('block-student-time').innerText = existingRecord.submittedAt;
+        document.getElementById('duplicate-block-modal').classList.remove('hidden');
+      }
+    }
+
+    // Save submission records (Rule 1)
+    async function saveSubmission(studentId, submissionData) {
+      if (db && user) {
+        try {
+          const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'submissions', studentId);
+          await setDoc(docRef, submissionData);
+          return true;
+        } catch (err) {
+          console.error("Failed saving to DB:", err);
+        }
+      }
+
+      const localData = JSON.parse(sessionStorage.getItem('local_submissions') || '{}');
+      localData[studentId] = submissionData;
+      sessionStorage.setItem('local_submissions', JSON.stringify(localData));
+      return true;
+    }
+
+    // Start Exam Handler
+    async function startExam() {
+      const name = document.getElementById('student-name').value.trim();
+      const id = document.getElementById('student-id').value.trim();
+      const sClass = document.getElementById('student-class').value.trim();
+
+      if (!name || !id || !sClass) {
+        showAlert("กรุณากรอกข้อมูลส่วนตัวให้ครบถ้วนก่อนเข้าสู่การทำข้อสอบนะคะ");
+        return;
+      }
+
+      // Pre-flight validation against double entries
+      const checkDouble = await verifySubmission(id);
+      if (checkDouble) {
+        document.getElementById('block-student-id').innerText = id;
+        document.getElementById('block-student-name').innerText = checkDouble.name;
+        document.getElementById('block-student-score').innerText = checkDouble.score;
+        document.getElementById('block-student-time').innerText = checkDouble.submittedAt;
+        document.getElementById('duplicate-block-modal').classList.remove('hidden');
+        return;
+      }
+
+      // Freeze profile editing controls
+      document.getElementById('student-name').disabled = true;
+      document.getElementById('student-id').disabled = true;
+      document.getElementById('student-class').disabled = true;
+      document.getElementById('start-exam-control').classList.add('hidden');
+
+      // Unveil exam form & start sticky timer bar
+      document.getElementById('quiz-form').classList.remove('hidden');
+      document.getElementById('sticky-timer-bar').classList.remove('hidden');
+      document.body.style.paddingTop = "50px"; // give header offset
+
+      // Activate Countdown timer
+      timeLeft = 1200; // 20 mins
+      updateTimerDisplay();
+      examTimer = setInterval(updateTimerTick, 1000);
+
+      // Smooth scroll to questions root
+      document.getElementById('questions-root').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateTimerTick() {
+      if (timeLeft <= 0) {
+        clearInterval(examTimer);
+        autoSubmitByTimeout();
+      } else {
+        timeLeft--;
+        updateTimerDisplay();
+      }
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      const formattedMin = String(minutes).padStart(2, '0');
+      const formattedSec = String(seconds).padStart(2, '0');
+      document.getElementById('countdown-timer').innerText = `${formattedMin}:${formattedSec}`;
+
+      if (timeLeft < 120) {
+        document.getElementById('sticky-timer-bar').className = "fixed top-0 left-0 w-full bg-red-700 text-white text-center py-2.5 font-bold z-40 shadow-md flex items-center justify-center gap-2 animate-pulse";
+      }
+    }
+
+    // Force Submit when timer expires
+    function autoSubmitByTimeout() {
+      showAlert("⏱️ หมดเวลาทำข้อสอบแล้วค่ะ! ระบบกำลังส่งกระดาษคำตอบของคุณครูแบบอัตโนมัติ...");
+      setTimeout(() => {
+        executeSubmission(true);
+      }, 2000);
+    }
+
+    // Finalize exam scores and enforce submission parameters
+    async function executeSubmission(isTimeout = false) {
+      if (examTimer) clearInterval(examTimer);
+      document.getElementById('sticky-timer-bar').classList.add('hidden');
+      document.body.style.paddingTop = "0";
+
+      const name = document.getElementById('student-name').value.trim();
+      const id = document.getElementById('student-id').value.trim();
+      const sClass = document.getElementById('student-class').value.trim();
+
+      // Calculation of correct answer count
+      let correctCount = 0;
+      const totalQ = quizData.length;
+
+      quizData.forEach((qObj, index) => {
+        const uAnsIdx = userAnswers[index];
+        if (uAnsIdx === qObj.correct) {
+          correctCount++;
+        }
+
+        // Lock radio inputs and stylize neutrally (without color indicators)
+        const card = document.getElementById(`q-card-${index}`);
+        const labels = card.querySelectorAll('label');
+
+        labels.forEach((label, lIdx) => {
+          const radio = label.querySelector('input');
+          if (radio) radio.disabled = true;
+          label.style.cursor = 'default';
+
+          if (lIdx === uAnsIdx) {
+            // Purple highlight indicating user choice - but no indicator of correct/incorrect status
+            label.className = "flex items-center gap-3 p-3 border-2 border-purple-400 bg-purple-50 rounded-lg text-sm md:text-base font-semibold";
+          } else {
+            label.className = "flex items-center gap-3 p-3 border border-gray-100 bg-gray-50 text-gray-400 rounded-lg text-sm md:text-base";
+          }
+        });
+      });
+
+      // Prepare Submission Database document
+      const timestamp = new Date().toLocaleString('th-TH');
+      const submissionRecord = {
+        name: name,
+        studentClass: sClass,
+        score: `${correctCount} / ${totalQ}`,
+        submittedAt: timestamp
+      };
+
+      await saveSubmission(id, submissionRecord);
+
+      // Disable submission action layouts
+      document.getElementById('student-info-card').classList.add('opacity-75');
+      document.getElementById('submit-btn').classList.add('hidden');
+
+      // Populate dashboard statistics
+      document.getElementById('res-student-name').innerText = name;
+      document.getElementById('res-student-id').innerText = id;
+      document.getElementById('res-student-class').innerText = sClass;
+      document.getElementById('score-text').innerText = `${correctCount} / ${totalQ}`;
+
+      const statusBadge = document.getElementById('result-status-badge');
+      if (correctCount >= 12) {
+        statusBadge.className = "inline-block px-4 py-2 rounded-full font-bold text-sm bg-green-100 text-green-800 border border-green-200";
+        statusBadge.innerText = "🏆 ผ่านเกณฑ์การประเมินวิชา";
+      } else {
+        statusBadge.className = "inline-block px-4 py-2 rounded-full font-bold text-sm bg-red-100 text-red-800 border border-red-200";
+        statusBadge.innerText = "⚠️ ยังไม่ผ่านเกณฑ์การประเมิน (ต่ำกว่า 12 คะแนน)";
+      }
+
+      // Smooth scroll to the result container
+      const resContainer = document.getElementById('result-container');
+      resContainer.classList.remove('hidden');
+      resContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Manual Form Submission Control
+    async function submitQuiz() {
+      const totalQ = quizData.length;
+      const answeredCount = Object.keys(userAnswers).length;
+
+      if (answeredCount < totalQ) {
+        showAlert(`⚠️ กรุณาทำข้อสอบให้ครบทุกข้อก่อนส่งนะคะ (ขณะนี้คุณตอบไปเพียง ${answeredCount} จากทั้งหมด ${totalQ} ข้อเท่านั้น)`);
+        return;
+      }
+
+      executeSubmission(false);
+    }
+
+    // Dynamic rendering of questions
+    window.onload = async function() {
+      await initFirebase();
+      
+      const root = document.getElementById('questions-root');
+      root.innerHTML = ''; // clear initial load message
+
+      quizData.forEach((qObj, index) => {
+        const qNumber = index + 1;
+        const card = document.createElement('div');
+        card.id = `q-card-${index}`;
+        card.className = "bg-white rounded-lg shadow-md p-6 border border-gray-200 transition-all duration-300";
+
+        // Title Element
+        const titleEl = document.createElement('h3');
+        titleEl.className = "text-base md:text-lg font-bold text-gray-900 mb-4 flex items-start gap-2 leading-relaxed";
+        titleEl.innerHTML = `
+          <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">ข้อ ${qNumber}</span>
+          <span>${qObj.q}</span>
+        `;
+        card.appendChild(titleEl);
+
+        // Choices Element
+        const choicesGrid = document.createElement('div');
+        choicesGrid.className = "space-y-3";
+
+        qObj.choices.forEach((choice, choiceIdx) => {
+          const label = document.createElement('label');
+          label.className = "flex items-center gap-3 p-3 border border-gray-100 rounded-lg cursor-pointer hover:bg-purple-50 transition-all duration-150 text-sm md:text-base";
+          
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = `question-${index}`;
+          radio.value = choiceIdx;
+          radio.className = "w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500";
+          
+          radio.addEventListener('change', () => {
+            userAnswers[index] = choiceIdx;
+            const siblings = choicesGrid.querySelectorAll('label');
+            siblings.forEach(sib => sib.classList.remove('bg-purple-100', 'border-purple-300', 'font-semibold'));
+            label.classList.add('bg-purple-100', 'border-purple-300', 'font-semibold');
+          });
+
+          label.appendChild(radio);
+          
+          const textNode = document.createElement('span');
+          textNode.innerText = choice;
+          label.appendChild(textNode);
+          
+          choicesGrid.appendChild(label);
+        });
+
+        card.appendChild(choicesGrid);
+        root.appendChild(card);
+      });
+
+      // Bind input blur validators
+      document.getElementById('student-id').addEventListener('blur', checkExistingSubmission);
+    };
+
+    function showAlert(msg) {
+      document.getElementById('custom-alert-msg').innerText = msg;
+      document.getElementById('custom-alert').classList.remove('hidden');
+    }
+
+    function closeAlert() {
+      document.getElementById('custom-alert').classList.add('hidden');
+    }
+
+    function clearBlockedStudent() {
+      document.getElementById('duplicate-block-modal').classList.add('hidden');
+      const idInput = document.getElementById('student-id');
+      idInput.value = '';
+      idInput.focus();
+    }
+
+    function copyResultToClipboard() {
+      const name = document.getElementById('student-name').value.trim();
+      const id = document.getElementById('student-id').value.trim();
+      const sClass = document.getElementById('student-class').value.trim();
+      const score = document.getElementById('score-text').innerText;
+      const passText = (parseInt(score) >= 12) ? "ผ่านเกณฑ์การสอบวัดระดับ ✅" : "ยังไม่ผ่านเกณฑ์การสอบวัดระดับ ❌";
+
+      const textToCopy = `📋 รายงานคะแนนสอบวิชาประวัติศาสตร์ฉบับคนทำงาน (ระดับ ปวช.)
+---------------------------------
+ผู้สอบ: ${name}
+รหัสประจำตัว: ${id}
+ห้องเรียน: ${sClass}
+ส่งผลคะแนนสอบสำเร็จเมื่อ: ${new Date().toLocaleDateString('th-TH')}
+ผลคะแนนรวมที่บันทึกได้: ${score} คะแนน
+ผลลัพธ์: ${passText}
+(ข้อมูลการทำสอบได้รับการรักษาความปลอดภัย ป้องกันการตรวจแก้ไขซ้ำซ้อน)
+---------------------------------`;
+
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = textToCopy;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          const successMsg = document.getElementById('copy-success-msg');
+          successMsg.classList.remove('hidden');
+          setTimeout(() => {
+            successMsg.classList.add('hidden');
+          }, 3000);
+        }
+      } catch (err) {
+        console.error("Error executing copy command:", err);
+      }
+      
+      document.body.style.paddingTop = "0";
+      document.body.removeChild(tempTextArea);
+    }
+
+    // Expose modular functions globally for HTML inline calls
+    window.startExam = startExam;
+    window.submitQuiz = submitQuiz;
+    window.closeAlert = closeAlert;
+    window.clearBlockedStudent = clearBlockedStudent;
+    window.copyResultToClipboard = copyResultToClipboard;
+  </script>
+</body>
+</html>
